@@ -1,0 +1,73 @@
+{% extends "base.html" %} {% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 ">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+            <a data-toggle="collapse" href="#collapse1"><strong>Documents</strong></a>
+          </h4>
+                </div>
+                <div id="collapse1" class="panel-collapse ">
+                    <ul id="Document_list" class="list-group" style="overflow-y: scroll; max-height: 500px">
+
+                    </ul>
+                </div>
+
+            </div>
+                        <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+            <a data-toggle="collapse" href="#collapse3"><strong>Annotated by</strong></a>
+          </h4>
+                </div>
+                <div id="collapse3" class="panel-collapse ">
+                    <ul id="Notes_list" class="list-group" style="overflow-y: scroll; max-height: 500px">
+
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <div class=" col-xs-12 left col-md-9 ">
+            <div class="modal fade" id="ErrModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="panel-heading">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h5 class="modal-title">
+  <strong>Wrong Selection</strong>
+</h5>
+                        </div>
+                        <div class="modal-body" id="ErrBody">
+                          <ul><h5>Warning be sure to:</h5>
+                            <li>Select more than three characters.</li>
+                            <li>Select a whole word.</li>
+                            <li>Not overlap partially your selection on highlighted text.</li>
+                            </li>
+                          </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="BigDiv">
+            <ul id="docu" class="nav nav-tabs nav-justified">
+
+            </ul>
+            <div height="100%" class="tab-content" id="tabs">
+
+            </div>
+</div>
+        </div>
+
+    </div>
+</div>
+<script src="static/js/reader.js"></script>
+ {% endblock %}
