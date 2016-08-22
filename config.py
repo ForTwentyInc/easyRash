@@ -1,0 +1,3 @@
+DEBUG=False
+SECRET_KEY = 'q\x8a(O\x98\xc2\xafOB\x95\xf8\xb1\x96\xc3\xda\xa9;Rn3\x97o\xc5\x93"\xde`\xea\x8d\n'
+SERVER_NAME = "site1615.web.cs.unibo.it"
