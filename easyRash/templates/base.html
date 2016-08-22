@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/wsgi/static/css/stylebase.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <title> {{ title }} </title>
+    <style></style>
+</head>
+
+<body>
+
+    <span id="globaluser" hidden>{{g.user.Name + g.user.F_Name}}</span>
+    <span id="Panelcheck" hidden>{{g.user.Name +" "+g.user.F_Name}}</span>
+
+    <nav id="antani" class="navbar navbar-inverse " role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="{{ url_for('home') }}" class="navbar-brand"><span id="brand" style = " font-size :  25px ; color: lightgrey ;">EasyRash</span></a></li>
+                     {% if annotator %}
+
+                    <li style="margin-top:8px;">
+                        <div class="btn-group " style="margin-left:15px;" id="toggle_event_editing">
+                            <button type="button" class="btn btn-primary locked_active "><i class="fa fa-unlock"></i></button>
+                            <button type="button" class="btn btn-default unlocked_inactive"><i class="fa fa-lock"></i></button>
+                        </div>
+                    </li>
+                    <li><i href="#InfoModal" data-tooltip="tooltip" title="How to insert your annotation" style="padding-top:10px; margin-left:15px; font-size: 25px; color: lightgrey; padding-top:10px;" data-toggle="modal" data-target="#InfoModal" class="fa fa-question-circle "
+                            aria-hidden="true"></i></li>
+                    {% endif %}
+
+                      </ul>
+
+
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+
+                <ul class="nav navbar-nav navbar-right">
+                    <div style="margin-left:15px;" class="btn-group pull-right">
+                        <a class="btn dropdown-toggle navbar-brand" style="color:lightgrey;" data-toggle="dropdown" href="#">{{g.user.Name +" "+g.user.F_Name}}<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('logout') }}" align="center">Logout <span class="glyphicon glyphicon-log-out"></span></a></li>
+                            <li class="divider"></li>
+                            <li><a href="#" align="center">About <span class="glyphicon glyphicon-info-sign"></span></a></li>
+                            <li class="divider"></li>
+                            <li><a onclick="ViewProfile()" align="center">Profile<span class="glyphicon glyphicon-user"></span></a></li>
+                            <li class="divider"></li>
+                            <li><a data-toggle="modal" data-target="#ChangePsw" align="center">Change Password<span class="glyphicon glyphicon-cog"></span></a></li>
+                        </ul>
+                    </div>
+                    {% if annotator %}
+                    <div  class="btn-group pull-right">
+                        <a class="btn dropdown-toggle navbar-brand dropdis" style="color:lightgrey;" data-toggle="dropdown" href="#">
+            Annotator Mode
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+            <span class="caret"></span>
+          </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('home') }}" align="center">Reader Mode <i class="fa fa-newspaper-o" aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+                        {% else %}
+                        <div class="btn-group pull-right">
+                            <a class="btn dropdown-toggle navbar-brand" style="color:lightgrey;" data-toggle="dropdown" href="#">
+            Reader Mode
+            <i class="fa fa-newspaper-o" aria-hidden="true"></i>
+            <span class="caret"></span>
+          </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url_for('annotator') }}" align="center">Annotator Mode <i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                            </ul>
+                        </div>
+                        {% endif %}
+                        <div  class="btn-group pull-right">
+                        <div id="daniela" class="navbar-brand " style="color:lightgrey;" >
+                          Role:
+                          <span id="role"></span>
+                        </div>
+
+                        <div  class="btn-group pull-right">
+                        <a class="btn dropdown-toggle navbar-brand dropdis dr" style="color:lightgrey;" data-toggle="dropdown" href="#">
+                          Conference:
+                          <span id="conference"></span>
+                          <span class="caret"></span>
+                        </a>
+                        <ul id="dropdownmenu" class="dropdown-menu">
+
+                        </ul>
+                      </div>
+                </ul>
+
+                </div>
+            </div>
+    </nav>
+    <div class="modal fade container" data-keyboard="false" data-backdrop="static" id="AnnModal" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+                <div class="panel-heading">
+                    <h4 class="align-center"></span> Insert Annotation</h4>
+                </div>
+
+                <div class="modal-body" style="padding:40px 50px;">
+                    <input hidden id="IDdoc" name="IDdoc"></input>
+                    <input hidden id="BodyAnn" name="BodyAnn"></input>
+                    <input hidden id="IDAnn" name="IDAnn"></input>
+
+                    <textarea class="form-control" id="annot" name="annot" placeholder="Insert here your annotation"></textarea>
+                    <button onclick="StorageUnsaved()" class="btn btn-primary btn-block" width="100px"> Save</button>
+                    <button style=" margin-top:5px;" width="100px" onclick="CancelAnnotation()" class="btn btn-default btn-block"> Close</button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade container" id="InfoModal" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+                <div class="panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="align-center"></span>How to create an annotation</h4>
+                </div>
+
+
+                <div class="modal-body" style="padding:40px 50px;">
+                    <h4>Follow these simple steps to annotate:</h4>
+                    <ol style="font-size:15px;">
+                      <li>Select a paper.</li>
+                      <li>Get the lock.<i class="fa fa-lock editsave"></i></li>
+                      <li>To insert a new comment select the text from the paper and click<i class="fa fa-pencil-square-o editsave"></i> </li>
+                      <li>If you don't want to comment anymore click <i class="fa fa-floppy-o editsave"></i> and send your global comment.</li>
+                      <li>Remeber to unlock the document before quit.<i class="fa fa-unlock editsave"></i></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade container" id="LockModal" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+                <div class="panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="align-center"></span>Warning!</h4>
+                </div>
+
+                <div class="modal-body" style="padding:40px 50px;">
+                    <p>The document you are trying to lock is locked by another user. Please try again later</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade container" id="InfoDocument" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+                <div class="panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4><span id="statustitle"></span></h4>
+                </div>
+
+
+                <div class="modal-body" style="padding:40px 50px;">
+                    <h5><strong><i class="fa fa-info" aria-hidden="true"></i>  Status:</strong></h5><span id="statusdoc"></span>
+                    <h5><strong><i class="fa fa-info" aria-hidden="true"></i> Chairs:</strong></h5><span id="statuschair"></span>
+                    <h5><strong><i class="fa fa-square-o" aria-hidden="true"></i>  Awaiting Review:</strong></h5><span id="statusreviewers"></span>
+                    <h5><strong><i class="fa fa-check-square-o" aria-hidden="true"></i>  Reviewed:</strong></h5><span id="statusreviewed"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade container" id="WindowModal" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+                <div class="panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4><span id="warning"> Warning!</span></h4>
+                </div>
+
+
+                <div class="modal-body" style="padding:40px 50px;">
+                    <h5> You can only open three tabs simultaneously. </h5><span id="statusdoc"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade container" id="EditModal" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+                <div class="panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="align-center"></span> Edit Annotation</h4>
+                </div>
+
+
+                <div class="modal-body" style="padding:40px 50px;">
+
+
+                    <h4>Date</h4>
+                    <span id="EditDate"></span>
+                    <textarea class="form-control" id="EditAnnot" name="annotation"></textarea>
+
+                    <button id="TextEdit" class="btn btn-primary btn-block" action> Edit</button>
+                    <button id="DelBut" class="btn btn-default btn-block" action> Delete</button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+   <div id="modal">
+                <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="panel-heading">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">
+          <strong>Info-</strong>
+
+          <span id="ModalTitle"></span>
+        </h4>
+                            </div>
+                            <div class="modal-body" id="ModalBody">
+                                <h5>
+          <strong >Author:</strong><br>
+        </h5>
+                                <span id="Maut"></span>
+                                <h5>
+          <strong >Date:</strong><br>
+        </h5>
+                                <span id="Mdate"></span>
+                                <h5>
+          <strong >Text:</strong><br>
+        </h5>
+                                <span id="Mtext"></span>
+                            </div>
+                            <div class="modal-footer">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+<div class="modal fade" id="ErrModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="panel-heading">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">
+  <strong>Warning!</strong>
+</h4>
+                        </div>
+                        <div class="modal-body" id="ErrBody">
+                          <ul><h4>wrong selection, warning be sure to:</h4>
+                            <li>Select more than three characters.</li>
+                            <li>Select a whole word.</li>
+                            <li>Not overlap partially your selection on highlighted text.</li>
+                            </li>
+                          </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+ <div class="modal fade container" id="GlobalModal" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="panel-heading">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">
+  <strong>Global Annotation</strong>
+                    </h4>
+                    </div>
+
+                    <div class="modal-body">
+
+  <strong ><span class="global glyphicon glyphicon-user"></span>   Author:</strong>
+
+                        <span id="Globalaut"></span><br>
+
+  <strong ><i class="global fa fa-calendar-o" aria-hidden="true"></i>   Date:</strong>
+
+                        <span id="Globaldate"></span><br>
+
+
+
+
+  <strong ><i class="global fa fa-star" aria-hidden="true"></i>   Score:</strong>
+
+                        <span id="Globalscore"></span><br>
+
+  <strong ><i class="global fa fa-info" aria-hidden="true"></i>   Status:</strong>
+
+                        <span id="Globalstatus"></span><br>
+
+<strong ><i class="global fa fa-file-text-o" aria-hidden="true"></i>   Text:</strong><br>
+
+                        <span id="Globaltext"></span><br>
+
+                      <strong><i class="global fa fa-list-ul" aria-hidden="true"></i>   comment:</strong>
+
+                        <ul id="LocalComment">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    <div class="modal fade container" id="ViewProfile" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+                <div class="panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="align-center" id="changetitle"></span> Info Profile</h4>
+                </div>
+
+
+                <div class="modal-body" style="padding:40px 50px;">
+
+                    <form>
+                        <div class="form-group">
+                            <h5><span class="glyphicon glyphicon-user"></span> First Name:</h5>
+                            <span id="Fname"></span>
+
+                        </div>
+                        <div class="form-group">
+                            <h5><span class="glyphicon glyphicon-user"></span> Second Name:</h5>
+                            <span id="Sname"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <h5><span class="glyphicon glyphicon-envelope"></span> Email:</h5>
+                            <span id="email"></span>
+
+                        </div>
+                        <div class="form-group">
+                            <h5><span class="glyphicon glyphicon-certificate"></span> Sex:</h5>
+                            <span id="sex"></span>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade container" id="SaveModal" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+                <div class="panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="align-center" id="changetitle"></span> Save all annotations</h4>
+                </div>
+
+                <div class="modal-body" style="padding:40px 50px;">
+
+
+                    <div class="form-group">
+                        <h5>Global comment:</h5>
+                        <textarea class="form-control" id="SaveAnnot" name="annotation"></textarea>
+                        <h5>Status:</h5>
+                        <input type="radio" name="status" value="pso:accepted-for-publication">Accepted  <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                        <br>
+                        <input type="radio" name="status" value="pso:rejected-for-publication">Rejected  <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+
+                        <h5>Rate:</h5>
+                        <div style="margin-left:2%;" class="stars">
+                            <input class="star star-5" id="star-5" value="5" type="radio" name="star" />
+                            <label class="star star-5" for="star-5"></label>
+                            <input class="star star-4" id="star-4" value="4" type="radio" name="star" />
+                            <label class="star star-4" for="star-4"></label>
+                            <input class="star star-3" id="star-3" value="3" type="radio" name="star" />
+                            <label class="star star-3" for="star-3"></label>
+                            <input class="star star-2" id="star-2" value="2" type="radio" name="star" />
+                            <label class="star star-2" for="star-2"></label>
+                            <input class="star star-1" id="star-1" value="1" type="radio" name="star" />
+                            <label class="star star-1" for="star-1"></label>
+                        </div>
+
+
+                    </div>
+                    <button id="ChangeGlobal" onclick="SaveAll()" class="btn btn-primary btn-block" action> Save all</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" data-keyboard="false" data-backdrop="static" id="AnnModal" role="dialog">
+            <div class="modal-dialog" role="document">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="align-center"></span> Insert Annotation</h4>
+                    </div>
+
+                    <div class="modal-body" style="padding:40px 50px;">
+                        <input hidden id="IDdoc" name="IDdoc"></input>
+                        <input hidden id="BodyAnn" name="BodyAnn"></input>
+                        <input hidden id="IDAnn" name="IDAnn"></input>
+
+                        <textarea class="form-control" id="annot" name="annot" placeholder="Insert here your annotation"></textarea>
+                        <button onclick="StorageUnsaved()" class="btn btn-primary btn-block" width="100px"> Save</button>
+                        <button style=" margin-top:5px;" width="100px" onclick="CancelAnnotation()" class="btn btn-default btn-block"> Close</button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    <div class="modal fade container" id="ChangePsw" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+                <div class="panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="align-center" id="changetitle"></span> Change Password</h4>
+                </div>
+
+                <div class="modal-body" style="padding:40px 50px;">
+                    <div id="passchanged" class="alert alert-success " role="alert" hidden>
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Succes: </strong> Password changed.
+                    </div>
+
+                    <form id="changepassform" action="/wsgi/api/user" method="post">
+                        <div class="form-group">
+                            <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+                            <input type="password" name="new_pass" id="password" tabindex="2" class="form-control" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="psw"><span class="glyphicon glyphicon-check"></span> Confirm </label>
+                            <input type="password" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" onkeyup="checkpsw()" placeholder="Confirm Password">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block" id="Changepass" action> Change Password</button>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% block content %}{% endblock %}
+</body>
+<script src="static/js/base.js"></script>
+
+</html>
