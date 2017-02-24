@@ -1,7 +1,11 @@
 Javascript by Andrea Alcaras and Daniele Zanolini
+
 Python by Giacomo Leidi
 
-http://site1615.web.cs.unibo.it/wsgi
+EasyRash è un'applicazione Web che supporta il processo di peer-reviewing di un articolo in lista per l'accettazione ad una data conferenza.
 
-Login: jessica.jones@alias.com
-Pass: jessica.jones
+L'API supporta le seguenti operazioni:
+    - Gestione Utenti ( Registrazione, Login, Modifica Dati Profilo)
+    - Gestione Annotazione ( Inserimento, Rimozione e Modifica)
+    - Gestione Ruoli e Permessi ( Chair, Reviewer, Autore)
+
